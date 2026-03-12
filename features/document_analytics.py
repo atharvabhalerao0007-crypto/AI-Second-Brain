@@ -1,33 +1,21 @@
-import spacy
-from collections import Counter
+try:
+    import spacy
+    nlp = spacy.load("en_core_web_sm")
+except Exception:
+    nlp = None
 
-nlp = spacy.load("en_core_web_sm")
+def get_document_stats(text):
+    stats = {}
 
-def get_document_stats(pages, chunks):
+    stats["characters"] = len(text)
+    stats["words"] = len(text.split())
 
-    text = " ".join(pages)
+    if nlp:
+        doc = nlp(text)
+        stats["sentences"] = len(list(doc.sents))
+        stats["entities"] = len(doc.ents)
+    else:
+        stats["sentences"] = text.count(".")
+        stats["entities"] = 0
 
-    words = text.split()
-
-    word_count = len(words)
-
-    reading_time = round(word_count / 200)  # avg reading speed
-
-    doc = nlp(text)
-
-    entities = [ent.text for ent in doc.ents]
-
-    entity_count = len(set(entities))
-
-    keywords = [token.text.lower() for token in doc
-                if token.is_alpha and not token.is_stop]
-
-    top_keywords = Counter(keywords).most_common(10)
-
-    return {
-        "pages": len(pages),
-        "chunks": len(chunks),
-        "entities": entity_count,
-        "reading_time": reading_time,
-        "top_keywords": top_keywords
-    }
+    return stats
