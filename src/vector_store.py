@@ -7,12 +7,20 @@ from pathlib import Path
 class VectorStore:
     def __init__(self, dim: int, store_path: str):
         self.dim = dim
-        self.store_path = Path(store_path)
 
-        self.index_file = self.store_path / "faiss.index"
-        self.text_file = self.store_path / "texts.pkl"
+        # Convert to path
+        store_path = Path(store_path)
 
-        self.store_path.mkdir(parents=True, exist_ok=True)
+        # If a file path is given, use its parent folder
+        if store_path.suffix:
+            self.store_dir = store_path.parent
+        else:
+            self.store_dir = store_path
+
+        self.store_dir.mkdir(parents=True, exist_ok=True)
+
+        self.index_file = self.store_dir / "faiss.index"
+        self.text_file = self.store_dir / "texts.pkl"
 
         if self.index_file.exists() and self.text_file.exists():
             self.load_store()
