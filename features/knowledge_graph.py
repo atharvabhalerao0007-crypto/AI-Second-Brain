@@ -1,11 +1,12 @@
 # src/knowledge_graph.py
-
-import spacy
 import networkx as nx
 from pyvis.network import Network
 
-# Load spaCy model
-nlp = spacy.load("en_core_web_sm")
+try:
+    import spacy
+    nlp = spacy.load("en_core_web_sm")
+except Exception:
+    nlp = None
 
 
 def extract_entities(text):
