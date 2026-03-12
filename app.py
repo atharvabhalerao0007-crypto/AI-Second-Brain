@@ -19,7 +19,7 @@ from src.embeddings import Embeddings
 from src.vector_store import VectorStore
 from src.llm import LLMWrapper
 from src.rag_pipeline import RAGPipeline
-from features.document_analytics import get_document_stats
+#from features.document_analytics import get_document_stats
 
 from features.knowledge_graph import build_graph, draw_graph
 from streamlit.components.v1 import html
@@ -609,16 +609,16 @@ elif feature == "Document Analytics":
 
     st.header("Document Analytics Dashboard")
 
-    stats = get_document_stats(docs, chunks)
+    #stats = get_document_stats(docs, chunks)
 
     col1, col2, col3, col4 = st.columns(4)
 
-    col1.metric("Total Pages", stats["pages"])
-    col2.metric("Total Chunks", stats["chunks"])
-    col3.metric("Entities Found", stats["entities"])
-    col4.metric("Reading Time (min)", stats["reading_time"])
+   # col1.metric("Total Pages", stats["pages"])
+   # col2.metric("Total Chunks", stats["chunks"])
+    #col3.metric("Entities Found", stats["entities"])
+    #col4.metric("Reading Time (min)", stats["reading_time"])
 
     st.subheader("Top Keywords")
 
-    for word, count in stats["top_keywords"]:
-        st.write(f"{word} : {count}")
+    #for word, count in stats["top_keywords"]:
+      #  st.write(f"{word} : {count}")
