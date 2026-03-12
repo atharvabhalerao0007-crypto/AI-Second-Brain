@@ -1,21 +1,28 @@
-try:
-    import spacy
-    nlp = spacy.load("en_core_web_sm")
-except Exception:
-    nlp = None
+import spacy
+from collections import Counter
+
+nlp = spacy.load("en_core_web_sm")
 
 def get_document_stats(text):
-    stats = {}
 
-    stats["characters"] = len(text)
-    stats["words"] = len(text.split())
+    doc = nlp(text)
 
-    if nlp:
-        doc = nlp(text)
-        stats["sentences"] = len(list(doc.sents))
-        stats["entities"] = len(doc.ents)
-    else:
-        stats["sentences"] = text.count(".")
-        stats["entities"] = 0
+    word_count = len([token for token in doc if not token.is_punct])
+    sentence_count = len(list(doc.sents))
 
-    return stats
+    entities = [(ent.text, ent.label_) for ent in doc.ents]
+
+    keywords = [
+        token.lemma_
+        for token in doc
+        if token.is_alpha and not token.is_stop and len(token.text) > 3
+    ]
+
+    top_keywords = Counter(keywords).most_common(10)
+
+    return {
+        "word_count": word_count,
+        "sentence_count": sentence_count,
+        "entities": entities[:10],
+        "keywords": top_keywords,
+    }
