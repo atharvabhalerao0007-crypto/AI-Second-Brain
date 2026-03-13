@@ -16,14 +16,18 @@ def get_document_stats(text, chunks):
     keywords = Counter(words).most_common(10)
     entities = [(ent.text, ent.label_) for ent in doc.ents]
 
-    # approximate pages
+    # Approximate pages
     pages = max(1, word_count // 500)
+
+    # Reading time (average 200 words per minute)
+    reading_time = max(1, word_count // 200)
 
     return {
         "pages": pages,
         "chunks": len(chunks),
         "word_count": word_count,
         "sentence_count": sentence_count,
+        "reading_time": reading_time,
         "keywords": keywords,
         "entities": entities
     }
