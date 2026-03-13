@@ -609,26 +609,19 @@ elif feature == "Document Analytics":
 
     st.header("Document Analytics Dashboard")
 
-    stats = get_document_stats(" ".join(chunks), chunks)
+stats = get_document_stats(" ".join(chunks), chunks)
 
-    col1, col2, col3, col4 = st.columns(4)
+col1, col2, col3, col4 = st.columns(4)
 
-    col1.metric("Total Pages", stats["pages"])
-    col2.metric("Total Chunks", stats["chunks"])
-    col3.metric("Entities Found", len(stats.get("entities", [])))
-    col4.metric("Reading Time (min)", stats["reading_time"])
+col1.metric("Total Pages", stats["pages"])
+col2.metric("Total Chunks", stats["chunks"])
+col3.metric("Entities Found", len(stats["entities"]))
+col4.metric("Reading Time (min)", stats["reading_time"])
 
-    st.subheader("Top Keywords")
-    st.subheader("Named Entities")
+st.subheader("Top Keywords")
+st.write(stats["keywords"])
 
-entities = stats.get("entities", [])
+st.subheader("Named Entities")
 
-for entity in entities:
-    try:
-        ent, label = entity
-        st.write(f"{ent} ({label})")
-    except:
-        st.write(entity)
-
-    for word, count in stats["top_keywords"]:
-       st.write(f"{word} : {count}")
+for ent, label in stats["entities"]:
+    st.write(f"{ent} ({label})")
