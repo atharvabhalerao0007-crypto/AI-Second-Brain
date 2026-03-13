@@ -609,7 +609,7 @@ elif feature == "Document Analytics":
 
     st.header("Document Analytics Dashboard")
 
-    stats = get_document_stats(docs, chunks)
+    stats = get_document_stats(" ".join(chunks))
 
     col1, col2, col3, col4 = st.columns(4)
 
