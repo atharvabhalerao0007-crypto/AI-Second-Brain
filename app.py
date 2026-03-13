@@ -615,18 +615,20 @@ elif feature == "Document Analytics":
 
     col1.metric("Total Pages", stats["pages"])
     col2.metric("Total Chunks", stats["chunks"])
-    col3.metric("Entities Found", len(stats["entities"]))
+    col3.metric("Entities Found", len(stats.get("entities", [])))
     col4.metric("Reading Time (min)", stats["reading_time"])
 
     st.subheader("Top Keywords")
     st.subheader("Named Entities")
 
-for entity in stats["entities"]:
-    if isinstance(entity, tuple):
+entities = stats.get("entities", [])
+
+for entity in entities:
+    try:
         ent, label = entity
         st.write(f"{ent} ({label})")
-    else:
+    except:
         st.write(entity)
-        
+
     for word, count in stats["top_keywords"]:
        st.write(f"{word} : {count}")
