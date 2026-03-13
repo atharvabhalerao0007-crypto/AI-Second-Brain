@@ -621,7 +621,12 @@ elif feature == "Document Analytics":
     st.subheader("Top Keywords")
     st.subheader("Named Entities")
 
-for ent, label in stats["entities"]:
-    st.write(f"{ent} ({label})")
+for entity in stats["entities"]:
+    if isinstance(entity, tuple):
+        ent, label = entity
+        st.write(f"{ent} ({label})")
+    else:
+        st.write(entity)
+        
     for word, count in stats["top_keywords"]:
        st.write(f"{word} : {count}")
