@@ -231,6 +231,11 @@ if feature == "RAG QA":
     # Page filter
     page_filter = st.number_input("Search within page (optional)", min_value=1, step=1)
 
+    # default values
+    answer = ""
+    sources = []
+
+
     # Chat input
     user_question = st.chat_input("Ask something about your document...")
 
@@ -255,9 +260,6 @@ if voice_data:
     user_question = result["text"]
 
     st.info(f"Voice Question: {user_question}")
-
-    answer = ""
-sources = []
 
 
 if user_question:
