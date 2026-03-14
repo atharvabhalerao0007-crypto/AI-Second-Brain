@@ -606,25 +606,81 @@ Format clearly.
 # ---------------------------
 elif feature == "Document Analytics":
 
-    st.header("Document Analytics Dashboard")
+    import pandas as pd
+    import matplotlib.pyplot as plt
+    from wordcloud import WordCloud
+
+    st.header("📊 Document Analytics Dashboard")
 
     stats = get_document_stats(" ".join(chunks), chunks)
 
+    # Top Metrics
     col1, col2, col3, col4 = st.columns(4)
 
-    col1.metric("Total Pages", stats["pages"])
-    col2.metric("Total Chunks", stats["chunks"])
-    col3.metric("Entities Found", len(stats["entities"]))
-    col4.metric("Reading Time (min)", stats["reading_time"])
+    col1.metric("📄 Pages", stats["pages"])
+    col2.metric("🧩 Chunks", stats["chunks"])
+    col3.metric("🏷 Entities", len(stats["entities"]))
+    col4.metric("⏱ Reading Time", f"{stats['reading_time']} min")
 
-    st.subheader("Top Keywords")
+    st.divider()
 
-for word, count in stats["keywords"]:
-    st.write(f"• {word} — {count} times")
+    # -------------------
+    # Top Keywords Table
+    # -------------------
 
-    st.subheader("Named Entities")
+    st.subheader("🔑 Top Keywords")
 
-    st.subheader("Named Entities")
+    keyword_df = pd.DataFrame(stats["keywords"], columns=["Keyword", "Frequency"])
 
-for ent, label in stats["entities"][:20]:
-    st.info(f"{ent}  —  {label}")
+    st.dataframe(keyword_df, use_container_width=True)
+
+    # -------------------
+    # Keyword Chart
+    # -------------------
+
+    st.subheader("📊 Keyword Frequency")
+
+    fig, ax = plt.subplots()
+
+    ax.bar(keyword_df["Keyword"], keyword_df["Frequency"])
+
+    ax.set_xlabel("Keyword")
+    ax.set_ylabel("Frequency")
+
+    st.pyplot(fig)
+
+    # -------------------
+    # Word Cloud
+    # -------------------
+
+    st.subheader("☁ Word Cloud")
+
+    text = " ".join([word for word, count in stats["keywords"] for i in range(count)])
+
+    wc = WordCloud(width=800, height=400, background_color="black").generate(text)
+
+    fig_wc, ax_wc = plt.subplots()
+
+    ax_wc.imshow(wc)
+    ax_wc.axis("off")
+
+    st.pyplot(fig_wc)
+
+    # -------------------
+    # Entity Distribution
+    # -------------------
+
+    st.subheader("🏷 Entity Distribution")
+
+    entity_df = pd.DataFrame(stats["entities"], columns=["Entity", "Type"])
+
+    entity_counts = entity_df["Type"].value_counts()
+
+    fig2, ax2 = plt.subplots()
+
+    ax2.bar(entity_counts.index, entity_counts.values)
+
+    ax2.set_xlabel("Entity Type")
+    ax2.set_ylabel("Count")
+
+    st.pyplot(fig2)
