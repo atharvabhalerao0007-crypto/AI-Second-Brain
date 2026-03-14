@@ -28,6 +28,8 @@ from utils.voice import speak_text
 import whisper
 import tempfile
 
+if "answer" not in st.session_state:
+    st.session_state.answer = ""
 
 st.set_page_config(page_title="AI Second Brain", layout="wide")
 @st.cache_resource
@@ -283,14 +285,14 @@ if user_question:
             # Normal RAG search
             else:
 
-                answer, sources = rag.answer_question(
+                st.session_state.answer, sources = rag.answer_question(
     question=user_question,
     top_k=5
 )
         from gtts import gTTS
 import io
 
-if answer:
+if st.session_state.answer:
 
     try:
         tts = gTTS(text=answer[:500], lang="en")
