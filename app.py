@@ -26,7 +26,6 @@ from streamlit.components.v1 import html
 from streamlit_mic_recorder import mic_recorder
 from utils.voice import speak_text
 import whisper
-from gtts import gTTS
 import tempfile
 
 
@@ -284,13 +283,15 @@ if user_question:
     question=user_question,
     top_k=5
 )
-                tts = gTTS(answer)
+            from gtts import gTTS
+import io
 
-with tempfile.NamedTemporaryFile(delete=False, suffix=".mp3") as tmp:
-    tts.save(tmp.name)
-    audio_bytes = open(tmp.name, "rb").read()
+tts = gTTS(answer)
 
-st.audio(audio_bytes, format="audio/mp3")
+audio_bytes = io.BytesIO()
+tts.write_to_fp(audio_bytes)
+
+st.audio(audio_bytes.getvalue(), format="audio/mp3")
 
         # Save chat
 st.session_state.chat_history.append(
