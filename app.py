@@ -286,11 +286,9 @@ if user_question:
 )
                 tts = gTTS(answer)
 
-audio_file = "response.mp3"
-
-tts.save(audio_file)
-
-audio_bytes = open(audio_file, "rb").read()
+with tempfile.NamedTemporaryFile(delete=False, suffix=".mp3") as tmp:
+    tts.save(tmp.name)
+    audio_bytes = open(tmp.name, "rb").read()
 
 st.audio(audio_bytes, format="audio/mp3")
 
