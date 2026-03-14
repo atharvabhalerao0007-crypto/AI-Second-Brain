@@ -254,6 +254,10 @@ if voice_data:
 
     st.info(f"Voice Question: {user_question}")
 
+    answer = ""
+sources = []
+
+
 if user_question:
 
         with st.spinner("Generating answer..."):
@@ -283,24 +287,22 @@ if user_question:
     question=user_question,
     top_k=5
 )
-            from gtts import gTTS
+        from gtts import gTTS
 import io
 
-# Ensure answer exists
-if answer and isinstance(answer, str):
+if answer:
 
     try:
-        tts = gTTS(text=answer[:500], lang="en")  # limit length
+        tts = gTTS(text=answer[:500], lang="en")
 
         audio_bytes = io.BytesIO()
         tts.write_to_fp(audio_bytes)
 
         st.audio(audio_bytes.getvalue(), format="audio/mp3")
 
-    except Exception as e:
+    except Exception:
         st.warning("Voice response unavailable.")
-        st.error(e)
-        
+
         # Save chat
 st.session_state.chat_history.append(
             {"question": user_question, "answer": answer}
