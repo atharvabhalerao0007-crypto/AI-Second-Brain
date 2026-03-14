@@ -286,13 +286,21 @@ if user_question:
             from gtts import gTTS
 import io
 
-tts = gTTS(answer)
+# Ensure answer exists
+if answer and isinstance(answer, str):
 
-audio_bytes = io.BytesIO()
-tts.write_to_fp(audio_bytes)
+    try:
+        tts = gTTS(text=answer[:500], lang="en")  # limit length
 
-st.audio(audio_bytes.getvalue(), format="audio/mp3")
+        audio_bytes = io.BytesIO()
+        tts.write_to_fp(audio_bytes)
 
+        st.audio(audio_bytes.getvalue(), format="audio/mp3")
+
+    except Exception as e:
+        st.warning("Voice response unavailable.")
+        st.error(e)
+        
         # Save chat
 st.session_state.chat_history.append(
             {"question": user_question, "answer": answer}
