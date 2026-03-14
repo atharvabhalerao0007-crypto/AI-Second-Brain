@@ -13,7 +13,6 @@ from config.settings import (
 )
 
 from src.document_loader import DocumentLoader
-from src.document_loader import PyPDF2
 from src.text_splitter import TextSplitter
 from src.embeddings import Embeddings
 from src.vector_store import VectorStore
@@ -609,19 +608,19 @@ elif feature == "Document Analytics":
 
     st.header("Document Analytics Dashboard")
 
-stats = get_document_stats(" ".join(chunks), chunks)
+    stats = get_document_stats(" ".join(chunks), chunks)
 
-col1, col2, col3, col4 = st.columns(4)
+    col1, col2, col3, col4 = st.columns(4)
 
-col1.metric("Total Pages", stats["pages"])
-col2.metric("Total Chunks", stats["chunks"])
-col3.metric("Entities Found", len(stats["entities"]))
-col4.metric("Reading Time (min)", stats["reading_time"])
+    col1.metric("Total Pages", stats["pages"])
+    col2.metric("Total Chunks", stats["chunks"])
+    col3.metric("Entities Found", len(stats["entities"]))
+    col4.metric("Reading Time (min)", stats["reading_time"])
 
-st.subheader("Top Keywords")
-st.write(stats["keywords"])
+    st.subheader("Top Keywords")
+    st.write(stats["keywords"])
 
-st.subheader("Named Entities")
+    st.subheader("Named Entities")
 
-for ent, label in stats["entities"]:
-    st.write(f"{ent} ({label})")
+    for ent, label in stats["entities"]:
+        st.write(f"{ent} ({label})")
