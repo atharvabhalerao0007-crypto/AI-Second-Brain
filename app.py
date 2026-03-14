@@ -618,9 +618,13 @@ elif feature == "Document Analytics":
     col4.metric("Reading Time (min)", stats["reading_time"])
 
     st.subheader("Top Keywords")
-    st.write(stats["keywords"])
+
+for word, count in stats["keywords"]:
+    st.write(f"• {word} — {count} times")
 
     st.subheader("Named Entities")
 
-    for ent, label in stats["entities"]:
-        st.write(f"{ent} ({label})")
+    st.subheader("Named Entities")
+
+for ent, label in stats["entities"][:20]:
+    st.info(f"{ent}  —  {label}")

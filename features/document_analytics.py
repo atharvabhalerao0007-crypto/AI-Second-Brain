@@ -7,7 +7,7 @@ def get_document_stats(text, chunks):
 
     doc = nlp(text)
 
-    words = [token.text.lower() for token in doc if token.is_alpha]
+    words = [token.text.lower() for token in doc if token.is_alpha and not token.is_stop]
     sentences = list(doc.sents)
 
     word_count = len(words)
