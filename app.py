@@ -234,6 +234,7 @@ if feature == "RAG QA":
     # default values
     answer = ""
     sources = []
+    unique_sources = []
 
 
     # Chat input
