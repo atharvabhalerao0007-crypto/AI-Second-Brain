@@ -23,8 +23,19 @@ from features.document_analytics import get_document_stats
 from features.knowledge_graph import build_graph, draw_graph
 from streamlit.components.v1 import html
 
+from streamlit_mic_recorder import mic_recorder
+from utils.voice import speak_text
+import whisper
+import tempfile
+
 
 st.set_page_config(page_title="AI Second Brain", layout="wide")
+@st.cache_resource
+def load_whisper():
+    import whisper
+    return whisper.load_model("base")
+
+whisper_model = load_whisper()
 
 # -----------------------
 # Custom UI Styling
@@ -123,18 +134,24 @@ feature = st.sidebar.selectbox(
 # -----------------------
 # Sidebar: Upload PDF
 # -----------------------
-uploaded_file = st.sidebar.file_uploader("Upload PDF", type=["pdf"])
+uploaded_files = st.sidebar.file_uploader(
+    "Upload Documents",
+    type=["pdf"],
+    accept_multiple_files=True
+)
 
-if uploaded_file:
+if uploaded_files:
 
     os.makedirs(DOCUMENT_PATH, exist_ok=True)
 
-    file_path = os.path.join(DOCUMENT_PATH, uploaded_file.name)
+    for uploaded_file in uploaded_files:
 
-    with open(file_path, "wb") as f:
-        f.write(uploaded_file.getbuffer())
+        file_path = os.path.join(DOCUMENT_PATH, uploaded_file.name)
 
-    st.sidebar.success(f"Saved {uploaded_file.name}")
+        with open(file_path, "wb") as f:
+            f.write(uploaded_file.getbuffer())
+
+    st.sidebar.success("Documents uploaded successfully!")
 
 
 # -----------------------
@@ -149,30 +166,41 @@ if not docs:
 
 
 # -----------------------
-# Split into Chunks
+# Initialize Pipeline (Cached)
 # -----------------------
-splitter = TextSplitter(chunk_size=CHUNK_SIZE, overlap=CHUNK_OVERLAP)
 
-chunks = [c for d in docs for c in splitter.split_text(d)]
+@st.cache_resource
+def initialize_pipeline():
+
+    loader = DocumentLoader(DOCUMENT_PATH)
+    docs = loader.load_documents()
+
+    if not docs:
+        return None, None
+
+    splitter = TextSplitter(chunk_size=CHUNK_SIZE, overlap=CHUNK_OVERLAP)
+
+    chunks = [c for d in docs for c in splitter.split_text(d)]
+
+    embedder = Embeddings(model_name=EMBEDDING_MODEL)
+    embeddings = embedder.get_embeddings(chunks)
+
+    os.makedirs(VECTOR_DB_PATH, exist_ok=True)
+
+    store_file = os.path.join(VECTOR_DB_PATH, "store.pkl")
+
+    store = VectorStore(dim=len(embeddings[0]), store_path=store_file)
+
+    store.add_vectors(np.array(embeddings), chunks)
+
+    return chunks, store
 
 
-# -----------------------
-# Generate Embeddings
-# -----------------------
-embedder = Embeddings(model_name=EMBEDDING_MODEL)
-embeddings = embedder.get_embeddings(chunks)
+chunks, store = initialize_pipeline()
 
-
-# -----------------------
-# Vector Store
-# -----------------------
-os.makedirs(VECTOR_DB_PATH, exist_ok=True)
-
-store_file = os.path.join(VECTOR_DB_PATH, "store.pkl")
-
-store = VectorStore(dim=len(embeddings[0]), store_path=store_file)
-
-store.add_vectors(np.array(embeddings), chunks)
+if chunks is None:
+    st.warning("No documents found in the documents folder.")
+    st.stop()
 
 
 # -----------------------
@@ -204,7 +232,29 @@ if feature == "RAG QA":
     # Chat input
     user_question = st.chat_input("Ask something about your document...")
 
-    if user_question:
+st.write("🎤 Or ask using voice")
+
+voice_data = mic_recorder(
+    start_prompt="Start Recording",
+    stop_prompt="Stop Recording",
+    just_once=True
+)
+import tempfile
+
+# Convert voice to text
+if voice_data:
+
+    with tempfile.NamedTemporaryFile(delete=False, suffix=".wav") as f:
+        f.write(voice_data["bytes"])
+        audio_path = f.name
+
+    result = whisper_model.transcribe(audio_path)
+
+    user_question = result["text"]
+
+    st.info(f"Voice Question: {user_question}")
+    
+if user_question:
 
         with st.spinner("Generating answer..."):
 
@@ -229,7 +279,12 @@ if feature == "RAG QA":
             # Normal RAG search
             else:
 
-                answer, sources = rag.answer_question(user_question, top_k=3)
+                answer, sources = rag.answer_question(
+    question=user_question,
+    top_k=5
+)
+                audio_file = speak_text(answer)
+        st.audio(audio_file)
 
         # Save chat
         st.session_state.chat_history.append(
@@ -237,13 +292,37 @@ if feature == "RAG QA":
         )
 
     # Display chat history
+for chat in st.session_state.chat_history:
+
+    with st.chat_message("user"):
+        st.markdown(chat["question"])
+
+    with st.chat_message("assistant"):
+        st.markdown(chat["answer"])
+
+    # -----------------------
+# Conversation Summary
+# -----------------------
+
+if st.button("Summarize Conversation"):
+
+    conversation = ""
+
     for chat in st.session_state.chat_history:
+        conversation += f"Q: {chat['question']}\nA: {chat['answer']}\n\n"
 
-        with st.chat_message("user"):
-            st.write(chat["question"])
+    summary_prompt = f"""
+Summarize this conversation clearly:
 
-        with st.chat_message("assistant"):
-            st.write(chat["answer"])
+{conversation}
+"""
+
+    summary = llm.generate_text(summary_prompt)
+
+    st.subheader("Conversation Summary")
+
+    st.success(summary)
+
 
     # Show sources
     if user_question:
@@ -252,8 +331,16 @@ if feature == "RAG QA":
 
         unique_sources = list(dict.fromkeys(sources))
 
-        for i, src in enumerate(unique_sources, 1):
-            st.info(f"Source {i}: {src}")
+    for i, src in enumerate(unique_sources, 1):
+
+     page_info = "Unknown Page"
+
+    if "Page" in src:
+        page_info = src.split("Page")[-1].strip()
+
+    with st.expander(f"Source {i} | Page {page_info}"):
+
+        st.write(src)
    
 
 # -----------------------
