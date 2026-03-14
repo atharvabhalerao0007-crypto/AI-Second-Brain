@@ -26,6 +26,7 @@ from streamlit.components.v1 import html
 from streamlit_mic_recorder import mic_recorder
 from utils.voice import speak_text
 import whisper
+from gtts import gTTS
 import tempfile
 
 
@@ -253,7 +254,7 @@ if voice_data:
     user_question = result["text"]
 
     st.info(f"Voice Question: {user_question}")
-    
+
 if user_question:
 
         with st.spinner("Generating answer..."):
@@ -283,11 +284,18 @@ if user_question:
     question=user_question,
     top_k=5
 )
-                audio_file = speak_text(answer)
-        st.audio(audio_file)
+                tts = gTTS(answer)
+
+audio_file = "response.mp3"
+
+tts.save(audio_file)
+
+audio_bytes = open(audio_file, "rb").read()
+
+st.audio(audio_bytes, format="audio/mp3")
 
         # Save chat
-        st.session_state.chat_history.append(
+st.session_state.chat_history.append(
             {"question": user_question, "answer": answer}
         )
 
