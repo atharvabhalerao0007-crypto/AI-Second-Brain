@@ -8,10 +8,8 @@ class VectorStore:
     def __init__(self, dim: int, store_path: str):
         self.dim = dim
 
-        # Convert to path
         store_path = Path(store_path)
 
-        # If a file path is given, use its parent folder
         if store_path.suffix:
             self.store_dir = store_path.parent
         else:
@@ -63,8 +61,15 @@ class VectorStore:
         with open(self.text_file, "wb") as f:
             pickle.dump(self.texts, f)
 
+    # ✅ SAFE VERSION
     def load_store(self):
-        self.index = faiss.read_index(str(self.index_file))
+        try:
+            self.index = faiss.read_index(str(self.index_file))
 
-        with open(self.text_file, "rb") as f:
-            self.texts = pickle.load(f)
+            with open(self.text_file, "rb") as f:
+                self.texts = pickle.load(f)
+
+        except Exception:
+            # recreate if corrupted
+            self.index = faiss.IndexFlatL2(self.dim)
+            self.texts = []
