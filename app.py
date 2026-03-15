@@ -347,22 +347,23 @@ Summarize this conversation clearly:
 
 
     # Show sources
-    if user_question:
+    # Show sources
+if user_question:
 
-        st.subheader("Sources")
+    st.subheader("Sources")
 
-        unique_sources = list(dict.fromkeys(sources))
+    unique_sources = list(dict.fromkeys(sources))
 
     for i, src in enumerate(unique_sources, 1):
 
-     page_info = "Unknown Page"
+        page_info = "Unknown Page"
 
-    if "Page" in src:
-        page_info = src.split("Page")[-1].strip()
+        if "Page" in src:
+            page_info = src.split("Page")[-1].strip()
 
-    with st.expander(f"Source {i} | Page {page_info}"):
+        with st.expander(f"Source {i} | Page {page_info}"):
 
-        st.write(src)
+            st.write(src)
    
 
 # -----------------------
