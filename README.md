@@ -1,296 +1,276 @@
-# 🧠 AI Second Brain
+🧠 AI Second Brain
 
-![Python](https://img.shields.io/badge/Python-3.10-blue)
-![Streamlit](https://img.shields.io/badge/Streamlit-App-red)
-![GenAI](https://img.shields.io/badge/Generative%20AI-RAG-green)
-![Vector DB](https://img.shields.io/badge/Vector%20Database-FAISS-orange)
-![License](https://img.shields.io/badge/License-MIT-yellow)
+An AI-powered document intelligence system that allows users to upload PDFs and interact with them using Retrieval Augmented Generation (RAG), Knowledge Graphs, Semantic Search, AI Insights, and Document Analytics.
 
-AI Second Brain is an **AI-powered document intelligence system** that helps users **understand, analyze, and learn from documents using Generative AI and Retrieval-Augmented Generation (RAG).**
+The system transforms static documents into an interactive knowledge assistant capable of answering questions, generating notes, creating quizzes, and visualizing relationships between concepts.
 
-The application allows users to upload documents and interact with them through multiple intelligent AI features such as **Semantic Search, Knowledge Graph Visualization, AI Insights, Quiz Generation, and Document Analytics.**
+🌐 Live Demo
 
-This project demonstrates how **LLMs, embeddings, vector databases, and retrieval pipelines** can be combined to build a powerful **AI research assistant.**
+You can try the application here:
 
----
+🚀 Live App:
+https://ai-second-brain.streamlit.app
 
-# 🚀 Features
+(Replace with your deployed link if different.)
 
-### 📄 Document Upload
+🚀 Features
+📄 Multi-Document RAG QA
 
-Upload PDF documents which are processed and converted into embeddings for semantic understanding.
+Upload multiple PDFs and ask questions using a Retrieval Augmented Generation pipeline.
 
-### 🔎 RAG Question Answering
+🔍 Semantic Search
 
-Ask questions about the uploaded document. The system retrieves relevant context and generates answers using an LLM.
+Find the most relevant document sections using embedding similarity search.
 
-### 🔍 Semantic Search
+🎤 Voice Question Answering
 
-Perform meaning-based search across the document using vector embeddings to retrieve the most relevant text passages.
+Ask questions using voice input and receive spoken answers.
 
-### 🧠 AI Insights
+🧠 Knowledge Graph Visualization
 
-Automatically generates key insights and summaries from the uploaded document to help users quickly understand the core ideas.
+Automatically extract entities and visualize relationships between concepts.
 
-### 🕸 Knowledge Graph
+📝 AI Notes Generator
 
-Extracts entities and relationships from the document and visualizes them as an interactive knowledge graph.
+Generate structured notes from document content.
 
-### ❓ Quiz Generator
+❓ Quiz Generator
 
-Automatically generates quiz questions from the document to help users test their understanding.
+Generate AI-powered multiple choice questions.
 
-### 📊 Document Analytics
+📑 Document Summary
 
-Provides document statistics like entity counts, word analysis, and structural insights.
+Generate concise summaries of uploaded documents.
 
----
+📊 AI Insights
 
-# 🏗 RAG System Architecture
+Extract key topics, entities, and important takeaways.
 
-The following diagram illustrates how the **AI Second Brain** processes documents and generates answers using a **Retrieval-Augmented Generation (RAG) pipeline**.
+📈 Document Analytics Dashboard
 
-![RAG Architecture](diagrams/rag_architecture.png)
+Includes:
 
-### Pipeline Overview
+Keyword frequency
 
-1️⃣ User uploads a document through the **Streamlit interface**
-2️⃣ The **Document Loader** extracts text from the PDF
-3️⃣ The **Text Splitter** divides the document into manageable chunks
-4️⃣ **Sentence Transformers** generate vector embeddings
-5️⃣ Embeddings are stored in a **FAISS vector database**
-6️⃣ The **Retriever** finds the most relevant chunks for a query
-7️⃣ The **LLM (Groq / Llama3)** generates the final response
+Entity distribution
 
-Additional modules such as **Semantic Search, Knowledge Graph, Quiz Generation, and AI Insights** provide deeper interaction with the document.
+Reading time estimation
 
----
+Word cloud visualization
 
-# 🧠 How It Works
+💬 Conversation Memory
 
-The system uses a **Retrieval-Augmented Generation (RAG) pipeline**:
+Maintains chat history and allows conversation summarization.
 
-1️⃣ Document Upload
-2️⃣ PDF Text Extraction
-3️⃣ Text Chunking
-4️⃣ Embedding Generation
-5️⃣ Vector Storage using FAISS
-6️⃣ Semantic Retrieval
-7️⃣ LLM Response Generation
+🏗️ System Architecture
 
-This ensures the AI generates answers **grounded in the document content instead of hallucinating information.**
+The system follows a Retrieval Augmented Generation (RAG) architecture.
 
----
+<img src="diagrams/rag_architecture.png.png" width="900">
+Workflow
 
-# 📸 Application Preview
+User uploads documents
 
-### 🧠 RAG Question Answering
+Documents are split into chunks
 
-![RAG QA](screenshots/rag_qa.png)
+Embeddings are generated
 
-![RAG QA 2](screenshots/rag_qa2.png)
+Vectors are stored in a vector database
 
----
+User asks a question
 
-### 🕸 Knowledge Graph Visualization
+Relevant chunks are retrieved
 
-![Knowledge Graph](screenshots/knowledge_graph.png)
+LLM generates answer using retrieved context
 
-![Knowledge Graph 2](screenshots/knowledge_graph2.png)
+The LLM is powered through the API from Groq, while vector similarity search is handled by FAISS.
 
----
+📸 Application Screenshots
+🧠 RAG Question Answering
+<img src="screenshots/rag_qa.png" width="900">
+<img src="screenshots/rag_qa2.png" width="900">
 
-### ❓ Quiz Generator
 
-![Quiz Generator](screenshots/quiz_generator.png)
+Ask questions about uploaded documents and receive answers with sources.
 
----
+🔍 Semantic Search
+<img src="screenshots/semantic_search.png" width="900">
 
-### 📊 Document Analytics
+Find the most relevant document chunks using semantic similarity.
 
-![Document Analytics](screenshots/document_analytics.png)
+🧠 Knowledge Graph Visualization
+<img src="screenshots/knowledge_graph.png" width="900">
+<img src="screenshots/knowledge_graph2.png" width="900">
 
----
 
-# 🏗 Project Structure
+Explore relationships between extracted concepts.
 
-```
-AI-Second-Brain
+❓ AI Quiz Generator
+<img src="screenshots/quiz_generator.png" width="900">
+
+Automatically generate quiz questions from document content.
+
+📊 Document Analytics Dashboard
+<img src="screenshots/analytics_dashboard.png" width="900">
+<img src="screenshots/analytics_dashboard2.png" width="900">
+
+Analyze documents with keyword charts, entity distribution, and word clouds.
+
+📑 AI Document Summary
+<img src="screenshots/document_summary.png" width="900">
+
+Generate concise summaries from uploaded documents.
+
+🧰 Tech Stack
+Programming Language
+
+Python
+
+Framework
+
+Streamlit
+
+LLM
+
+Llama 3 via Groq
+
+Vector Database
+
+FAISS
+
+AI / NLP Tools
+
+Whisper (speech recognition)
+
+gTTS (text-to-speech)
+
+spaCy (entity extraction)
+
+Visualization
+
+NetworkX
+
+PyVis
+
+Matplotlib
+
+WordCloud
+
+📁 Project Structure
+AI-SECOND-BRAIN
+│
+├── app.py
 │
 ├── config
 │   └── settings.py
 │
-├── data
-│   ├── documents
-│   └── vector_store
+├── src
+│   ├── document_loader.py
+│   ├── text_splitter.py
+│   ├── embeddings.py
+│   ├── vector_store.py
+│   ├── llm.py
+│   └── rag_pipeline.py
+│
+├── features
+│   ├── knowledge_graph.py
+│   └── document_analytics.py
+│
+├── utils
+│   └── voice.py
+│
+├── documents
+│
+├── vector_store
+│
+├── screenshots
 │
 ├── diagrams
 │   └── rag_architecture.png
 │
-├── features
-│   ├── document_analytics.py
-│   ├── knowledge_graph.py
-│   ├── notes_generator.py
-│   ├── quiz_generator.py
-│   └── semantic_search.py
-│
-├── src
-│   ├── document_loader.py
-│   ├── embeddings.py
-│   ├── llm.py
-│   ├── rag_pipeline.py
-│   ├── retriever.py
-│   ├── text_splitter.py
-│   └── vector_store.py
-│
-├── utils
-│   └── helpers.py
-│
-├── vector_store
-│   ├── chunks.pkl
-│   └── index.faiss
-│
-├── screenshots
-│   ├── rag_qa.png
-│   ├── rag_qa2.png
-│   ├── knowledge_graph.png
-│   ├── knowledge_graph2.png
-│   ├── quiz_generator.png
-│   └── document_analytics.png
-│
-├── app.py
-├── initialize_vector_store.py
-├── generate_test_pdf.py
-├── requirements.txt
-├── README.md
-└── .env
-```
-
-⚠️ Some additional files may exist due to dependency fixes and debugging during development. These are intentionally kept to ensure the application runs correctly.
-
----
-
-# ⚙️ Installation
-
-### 1️⃣ Clone the Repository
-
-```bash
-git clone https://github.com/yourusername/AI-Second-Brain.git
-cd AI-Second-Brain
-```
-
----
-
-### 2️⃣ Create Virtual Environment
-
-```bash
+└── README.md
+⚙️ Installation
+1️⃣ Clone Repository
+git clone https://github.com/your-username/ai-second-brain.git
+cd ai-second-brain
+2️⃣ Create Virtual Environment
 python -m venv venv
-```
 
----
+Activate environment
 
-### 3️⃣ Activate Virtual Environment
+Windows
 
-**Windows**
-
-```bash
 venv\Scripts\activate
-```
 
-**Mac / Linux**
+Mac/Linux
 
-```bash
 source venv/bin/activate
-```
-
----
-
-### 4️⃣ Install Dependencies
-
-```bash
+3️⃣ Install Dependencies
 pip install -r requirements.txt
-```
+4️⃣ Add API Key
 
----
+Open:
 
-### 5️⃣ Install SpaCy Model
+config/settings.py
 
-```bash
-python -m spacy download en_core_web_sm
-```
+Add your API key from Groq
 
----
-
-# ▶️ Run the Application
-
-Start the Streamlit app:
-
-```bash
+GROQ_API_KEY = "your_api_key_here"
+▶️ Run Application
 streamlit run app.py
-```
 
-The application will open in your browser:
+The application will start in your browser.
 
-```
-http://localhost:8501
-```
+🧪 Example Use Cases
 
----
+Research paper analysis
 
-# 🧰 Tech Stack
+AI study assistant
 
-### AI / Machine Learning
+Document intelligence systems
 
-* LangChain
-* Sentence Transformers
-* Groq LLM
-* SpaCy
+Knowledge base search
 
-### Vector Database
+Automated learning tools
 
-* FAISS
+🌟 Future Improvements
 
-### Backend
+Long-term memory for chat history
 
-* Python
+Multi-language document support
 
-### Frontend
+Web document ingestion
 
-* Streamlit
+Advanced knowledge graph reasoning
 
-### Data Processing
+PDF highlighting for answers
 
-* PyPDF2
-* NumPy
-* Pandas
+🤝 Contributing
 
----
+Contributions are welcome.
 
-# 📈 Future Improvements
+Fork the repository
 
-* Multi-document RAG support
-* Better knowledge graph visualization
-* Support for DOCX and TXT documents
-* Cloud deployment
-* User authentication system
+Create a feature branch
 
----
+Submit a pull request
 
-# 🎯 Use Cases
+📜 License
 
-* AI Research Assistant
-* Document Intelligence Systems
-* Study & Learning Assistant
-* Knowledge Management Tool
+This project is licensed under the MIT License.
 
----
+⭐ Support
 
-# 👨‍💻 Author
+If you find this project useful, please give it a star on GitHub ⭐
 
-**Atharva Bhalerao**
+👨‍💻 Author
 
----
+Atharva Bhalerao
 
-# 📜 License
+AI & Full-Stack Developer passionate about Generative AI, Machine Learning, and intelligent systems.
 
-This project is for educational and demonstration purposes.
+💼 LinkedIn: https://www.linkedin.com/in/atharva-bhalerao19
+
+🐙 GitHub: https://github.com/atharvabhalerao0007-crypto
+
+📧 Email: atharvabhalerao0007@gmail.com
