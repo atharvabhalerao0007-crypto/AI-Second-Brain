@@ -220,6 +220,9 @@ if feature == "RAG QA":
 
     st.header("RAG Question Answering")
 
+     # DEFAULT VALUE 
+    user_question = None
+
     # Chat history
     if "chat_history" not in st.session_state:
         st.session_state.chat_history = []
@@ -235,8 +238,7 @@ if feature == "RAG QA":
     answer = ""
     sources = []
     unique_sources = []
-    user_question = None
-
+    
 
     # Chat input
     user_question = st.chat_input("Ask something about your document...")
@@ -346,8 +348,8 @@ Summarize this conversation clearly:
 
     st.success(summary)
 
+st.write("Debug:", user_question if "user_question" in locals() else "Not defined")
 
-    # Show sources
     # Show sources
 if user_question:
 
