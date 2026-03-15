@@ -55,7 +55,7 @@ Maintains chat history and allows conversation summarization.
 
 The system follows a Retrieval Augmented Generation (RAG) architecture.
 
-<img src="diagrams/rag_architecture.png" width="900">
+<img src="diagrams/rag_architecture.png.png" width="900">
 
 Workflow:
 
