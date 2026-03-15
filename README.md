@@ -11,43 +11,33 @@ You can try the application here:
 🚀 Live App:
 https://ai-second-brain.streamlit.app
 
-(Replace with your deployed link if different.)
-
 🚀 Features
-📄 Multi-Document RAG QA
 
+📄 Multi-Document RAG QA
 Upload multiple PDFs and ask questions using a Retrieval Augmented Generation pipeline.
 
 🔍 Semantic Search
-
 Find the most relevant document sections using embedding similarity search.
 
 🎤 Voice Question Answering
-
 Ask questions using voice input and receive spoken answers.
 
 🧠 Knowledge Graph Visualization
-
 Automatically extract entities and visualize relationships between concepts.
 
 📝 AI Notes Generator
-
 Generate structured notes from document content.
 
 ❓ Quiz Generator
-
 Generate AI-powered multiple choice questions.
 
 📑 Document Summary
-
 Generate concise summaries of uploaded documents.
 
 📊 AI Insights
-
 Extract key topics, entities, and important takeaways.
 
 📈 Document Analytics Dashboard
-
 Includes:
 
 Keyword frequency
@@ -59,15 +49,15 @@ Reading time estimation
 Word cloud visualization
 
 💬 Conversation Memory
-
 Maintains chat history and allows conversation summarization.
 
 🏗️ System Architecture
 
 The system follows a Retrieval Augmented Generation (RAG) architecture.
 
-<img src="diagrams/rag_architecture.png.png" width="900">
-Workflow
+<img src="diagrams/rag_architecture.png" width="900">
+
+Workflow:
 
 User uploads documents
 
@@ -87,9 +77,7 @@ The LLM is powered through the API from Groq, while vector similarity search is 
 
 📸 Application Screenshots
 🧠 RAG Question Answering
-<img src="screenshots/rag_qa.png" width="900">
-<img src="screenshots/rag_qa2.png" width="900">
-
+<img src="screenshots/rag_qa.png" width="900"> <img src="screenshots/rag_qa2.png" width="900">
 
 Ask questions about uploaded documents and receive answers with sources.
 
@@ -99,9 +87,7 @@ Ask questions about uploaded documents and receive answers with sources.
 Find the most relevant document chunks using semantic similarity.
 
 🧠 Knowledge Graph Visualization
-<img src="screenshots/knowledge_graph.png" width="900">
-<img src="screenshots/knowledge_graph2.png" width="900">
-
+<img src="screenshots/knowledge_graph.png" width="900"> <img src="screenshots/knowledge_graph2.png" width="900">
 
 Explore relationships between extracted concepts.
 
@@ -111,8 +97,7 @@ Explore relationships between extracted concepts.
 Automatically generate quiz questions from document content.
 
 📊 Document Analytics Dashboard
-<img src="screenshots/analytics_dashboard.png" width="900">
-<img src="screenshots/analytics_dashboard2.png" width="900">
+<img src="screenshots/analytics_dashboard.png" width="900"> <img src="screenshots/analytics_dashboard2.png" width="900">
 
 Analyze documents with keyword charts, entity distribution, and word clouds.
 
@@ -122,48 +107,25 @@ Analyze documents with keyword charts, entity distribution, and word clouds.
 Generate concise summaries from uploaded documents.
 
 🧰 Tech Stack
-Programming Language
 
-Python
+Programming Language: Python
 
-Framework
+Framework: Streamlit
 
-Streamlit
+LLM: Llama 3 via Groq
 
-LLM
+Vector Database: FAISS
 
-Llama 3 via Groq
+AI / NLP Tools: Whisper (speech recognition), gTTS (text-to-speech), spaCy (entity extraction)
 
-Vector Database
-
-FAISS
-
-AI / NLP Tools
-
-Whisper (speech recognition)
-
-gTTS (text-to-speech)
-
-spaCy (entity extraction)
-
-Visualization
-
-NetworkX
-
-PyVis
-
-Matplotlib
-
-WordCloud
+Visualization: NetworkX, PyVis, Matplotlib, WordCloud
 
 📁 Project Structure
 AI-SECOND-BRAIN
 │
 ├── app.py
-│
 ├── config
 │   └── settings.py
-│
 ├── src
 │   ├── document_loader.py
 │   ├── text_splitter.py
@@ -171,52 +133,49 @@ AI-SECOND-BRAIN
 │   ├── vector_store.py
 │   ├── llm.py
 │   └── rag_pipeline.py
-│
 ├── features
 │   ├── knowledge_graph.py
 │   └── document_analytics.py
-│
 ├── utils
 │   └── voice.py
-│
 ├── documents
-│
 ├── vector_store
-│
 ├── screenshots
-│
 ├── diagrams
 │   └── rag_architecture.png
-│
 └── README.md
 ⚙️ Installation
+
 1️⃣ Clone Repository
+
 git clone https://github.com/your-username/ai-second-brain.git
 cd ai-second-brain
+
 2️⃣ Create Virtual Environment
+
 python -m venv venv
 
-Activate environment
+Activate environment:
 
-Windows
+Windows:
 
 venv\Scripts\activate
 
-Mac/Linux
+Mac/Linux:
 
 source venv/bin/activate
+
 3️⃣ Install Dependencies
+
 pip install -r requirements.txt
+
 4️⃣ Add API Key
-
-Open:
-
-config/settings.py
-
-Add your API key from Groq
+Open config/settings.py and add your Groq API key:
 
 GROQ_API_KEY = "your_api_key_here"
+
 ▶️ Run Application
+
 streamlit run app.py
 
 The application will start in your browser.
@@ -247,8 +206,6 @@ PDF highlighting for answers
 
 🤝 Contributing
 
-Contributions are welcome.
-
 Fork the repository
 
 Create a feature branch
@@ -266,11 +223,10 @@ If you find this project useful, please give it a star on GitHub ⭐
 👨‍💻 Author
 
 Atharva Bhalerao
-
 AI & Full-Stack Developer passionate about Generative AI, Machine Learning, and intelligent systems.
 
-💼 LinkedIn: https://www.linkedin.com/in/atharva-bhalerao19
+LinkedIn: https://www.linkedin.com/in/atharva-bhalerao19
 
-🐙 GitHub: https://github.com/atharvabhalerao0007-crypto
+GitHub: https://github.com/atharvabhalerao0007-crypto
 
-📧 Email: atharvabhalerao0007@gmail.com
+Email: atharvabhalerao0007@gmail.com
