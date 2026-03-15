@@ -220,8 +220,10 @@ if feature == "RAG QA":
 
     st.header("RAG Question Answering")
 
-     # DEFAULT VALUE 
+    # Default values
     user_question = None
+    answer = ""
+    sources = []
 
     # Chat history
     if "chat_history" not in st.session_state:
@@ -232,54 +234,62 @@ if feature == "RAG QA":
         st.session_state.chat_history = []
 
     # Page filter
-    page_filter = st.number_input("Search within page (optional)", min_value=1, step=1)
+    page_filter = st.number_input(
+        "Search within page (optional)", min_value=1, step=1
+    )
 
-    # default values
-    answer = ""
-    sources = []
-    unique_sources = []
-    
+    # -----------------------
+    # Text Question
+    # -----------------------
+    text_question = st.chat_input("Ask something about your document...")
 
-    # Chat input
-    user_question = st.chat_input("Ask something about your document...")
+    if text_question:
+        user_question = text_question
 
-st.write("🎤 Or ask using voice")
+    # -----------------------
+    # Voice Question
+    # -----------------------
+    st.write("🎤 Or ask using voice")
 
-voice_data = mic_recorder(
-    start_prompt="Start Recording",
-    stop_prompt="Stop Recording",
-    just_once=True
-)
-import tempfile
+    voice_data = mic_recorder(
+        start_prompt="Start Recording",
+        stop_prompt="Stop Recording",
+        just_once=True
+    )
 
-# Convert voice to text
-if voice_data:
+    import tempfile
 
-    with tempfile.NamedTemporaryFile(delete=False, suffix=".wav") as f:
-        f.write(voice_data["bytes"])
-        audio_path = f.name
+    if voice_data:
 
-    result = whisper_model.transcribe(audio_path)
+        with tempfile.NamedTemporaryFile(delete=False, suffix=".wav") as f:
+            f.write(voice_data["bytes"])
+            audio_path = f.name
 
-    user_question = result["text"]
+        result = whisper_model.transcribe(audio_path)
 
-    st.info(f"Voice Question: {user_question}")
+        user_question = result["text"]
 
+        st.info(f"Voice Question: {user_question}")
 
-if user_question:
+    # -----------------------
+    # Generate Answer
+    # -----------------------
+    if user_question:
 
         with st.spinner("Generating answer..."):
 
-            # If page filter is used
             if page_filter:
 
-                filtered_chunks = [c for c in chunks if f"Page {page_filter}" in c]
+                filtered_chunks = [
+                    c for c in chunks if f"Page {page_filter}" in c
+                ]
 
                 if filtered_chunks:
+
                     context = " ".join(filtered_chunks[:3])
 
                     answer = llm.generate_text(
-                        f"Answer the question using only this content:\n{context}\n\nQuestion: {user_question}"
+                        f"Answer using only this:\n{context}\n\nQuestion: {user_question}"
                     )
 
                     sources = filtered_chunks
@@ -288,86 +298,84 @@ if user_question:
                     answer = "No content found for that page."
                     sources = []
 
-            # Normal RAG search
             else:
 
-                st.session_state.answer, sources = rag.answer_question(
-    question=user_question,
-    top_k=5
-)
-        from gtts import gTTS
-import io
-
-if st.session_state.answer:
-
-    try:
-        tts = gTTS(text=answer[:500], lang="en")
-
-        audio_bytes = io.BytesIO()
-        tts.write_to_fp(audio_bytes)
-
-        st.audio(audio_bytes.getvalue(), format="audio/mp3")
-
-    except Exception:
-        st.warning("Voice response unavailable.")
+                answer, sources = rag.answer_question(
+                    question=user_question,
+                    top_k=5
+                )
 
         # Save chat
-st.session_state.chat_history.append(
+        st.session_state.chat_history.append(
             {"question": user_question, "answer": answer}
         )
 
-    # Display chat history
-for chat in st.session_state.chat_history:
+    # -----------------------
+    # Display Chat History
+    # -----------------------
+    for chat in st.session_state.chat_history:
 
-    with st.chat_message("user"):
-        st.markdown(chat["question"])
+        with st.chat_message("user"):
+            st.markdown(chat["question"])
 
-    with st.chat_message("assistant"):
-        st.markdown(chat["answer"])
+        with st.chat_message("assistant"):
+            st.markdown(chat["answer"])
 
     # -----------------------
-# Conversation Summary
-# -----------------------
+    # Voice Answer
+    # -----------------------
+    if answer:
 
-if st.button("Summarize Conversation"):
+        try:
+            from gtts import gTTS
+            import io
 
-    conversation = ""
+            tts = gTTS(text=answer[:500], lang="en")
 
-    for chat in st.session_state.chat_history:
-        conversation += f"Q: {chat['question']}\nA: {chat['answer']}\n\n"
+            audio_bytes = io.BytesIO()
+            tts.write_to_fp(audio_bytes)
 
-    summary_prompt = f"""
-Summarize this conversation clearly:
+            st.audio(audio_bytes.getvalue(), format="audio/mp3")
 
-{conversation}
-"""
+        except Exception:
+            st.warning("Voice response unavailable.")
 
-    summary = llm.generate_text(summary_prompt)
+    # -----------------------
+    # Conversation Summary
+    # -----------------------
+    if st.button("Summarize Conversation"):
 
-    st.subheader("Conversation Summary")
+        conversation = ""
 
-    st.success(summary)
+        for chat in st.session_state.chat_history:
+            conversation += f"Q: {chat['question']}\nA: {chat['answer']}\n\n"
 
-st.write("Debug:", user_question if "user_question" in locals() else "Not defined")
+        summary = llm.generate_text(
+            f"Summarize this conversation:\n{conversation}"
+        )
 
-    # Show sources
-if user_question:
+        st.subheader("Conversation Summary")
+        st.success(summary)
 
-    st.subheader("Sources")
+    # -----------------------
+    # Sources
+    # -----------------------
+    if sources:
 
-    unique_sources = list(dict.fromkeys(sources))
+        st.subheader("Sources")
 
-    for i, src in enumerate(unique_sources, 1):
+        unique_sources = list(dict.fromkeys(sources))
 
-        page_info = "Unknown Page"
+        for i, src in enumerate(unique_sources, 1):
 
-        if "Page" in src:
-            page_info = src.split("Page")[-1].strip()
+            page_info = "Unknown Page"
 
-        with st.expander(f"Source {i} | Page {page_info}"):
+            if "Page" in src:
+                page_info = src.split("Page")[-1].strip()
 
-            st.write(src)
-   
+            with st.expander(f"Source {i} | Page {page_info}"):
+
+                st.write(src)
 
 # -----------------------
 # Feature: Semantic Search
